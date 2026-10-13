@@ -1,0 +1,54 @@
+{
+  "name": "@notrealstudio/keymap",
+  "version": "0.1.0",
+  "description": "Hot keys as data: a table of bindings in layers (scheme → plugins → user overrides), chords by physical key (any keyboard layout), `when` contexts, collisions, hints for tooltips. Zero dependencies, no DOM.",
+  "keywords": [
+    "keymap",
+    "hotkeys",
+    "shortcuts",
+    "keyboard",
+    "keybindings",
+    "zero-dependency"
+  ],
+  "license": "MIT",
+  "author": "Julian Garrett",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "prebuild": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "node -e \"const p=require('./package.json');const bad=Object.entries({...p.dependencies,...p.peerDependencies}).filter(([,v])=>String(v).startsWith('file:'));if(bad.length){console.error('publish blocked: file: deps '+bad.map(([k])=>k).join(', '));process.exit(1)}\""
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Not-Real-Studio/nr-keymap.git"
+  },
+  "homepage": "https://github.com/Not-Real-Studio/nr-keymap#readme",
+  "bugs": {
+    "url": "https://github.com/Not-Real-Studio/nr-keymap/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  }
+}
