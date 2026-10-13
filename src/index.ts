@@ -316,7 +316,8 @@ export function keysOf<A extends string>(action: A, bindings: readonly Binding<A
 export function isMac(): boolean {
   const nav = (globalThis as { navigator?: { platform?: string; userAgentData?: { platform?: string }; userAgent?: string } }).navigator;
   if (!nav) return false;
-  const p = nav.userAgentData?.platform ?? nav.platform ?? nav.userAgent ?? '';
+  // `platform` first: headless Chromium reports userAgentData «Windows» on a Mac.
+  const p = nav.platform || nav.userAgentData?.platform || nav.userAgent || '';
   return /mac|iphone|ipad|ipod/i.test(p);
 }
 

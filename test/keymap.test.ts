@@ -6,6 +6,7 @@ import {
   collisions,
   evalWhen,
   formatChord,
+  isMac,
   isTextChord,
   keyHint,
   localOverrides,
@@ -75,6 +76,26 @@ describe('chords', () => {
     expect(isTextChord('f3', true)).toBe(false);
     expect(isTextChord('mod+k', true)).toBe(false);
     expect(isTextChord('alt+arrowdown', true)).toBe(false);
+  });
+});
+
+describe('platform', () => {
+  it('navigator.platform first (headless Chromium says «Windows» in userAgentData on a Mac)', () => {
+    const was = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+    const set = (v: unknown) => Object.defineProperty(globalThis, 'navigator', { value: v, configurable: true });
+    try {
+      set({ platform: 'MacIntel', userAgentData: { platform: 'Windows' } });
+      expect(isMac()).toBe(true);
+      set({ platform: 'Win32' });
+      expect(isMac()).toBe(false);
+      set({ platform: '', userAgentData: { platform: 'macOS' } });
+      expect(isMac()).toBe(true);
+      set(undefined);
+      expect(isMac()).toBe(false);
+    } finally {
+      if (was) Object.defineProperty(globalThis, 'navigator', was);
+      else delete (globalThis as { navigator?: unknown }).navigator;
+    }
   });
 });
 
